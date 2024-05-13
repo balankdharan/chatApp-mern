@@ -2,11 +2,37 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/generateToken.js";
 
-export const login = (req, res) => {
-  console.log("Login user");
+export const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user?.password || ""
+    );
+    if (!user || !isPasswordCorrect) {
+      return res.status(400).json({ error: "Invalid Credentials" });
+    }
+    generateTokenAndSetCookie(user._id, res);
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      username: user.username,
+      profilePic: user.profilePic,
+    });
+  } catch (err) {
+    console.log("Error: " + err);
+    res.status(500).json({ error: "server error" });
+  }
 };
 export const logout = (req, res) => {
-  console.log("Logout user");
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "Logged Out successFully" });
+  } catch (err) {
+    console.log("Error: " + err);
+    res.status(500).json({ error: "server error" });
+  }
 };
 export const signUp = async (req, res) => {
   try {

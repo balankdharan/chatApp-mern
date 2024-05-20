@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Login = () => {
   return (
     <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
@@ -10,7 +12,9 @@ const Login = () => {
         <form action="">
           <div>
             <label className="label p-2">
-              <span className="text-base label-text">Username</span>
+              <span className="text-base label-text text-gray-100">
+                Username
+              </span>
             </label>
             <input
               type="text"
@@ -20,7 +24,9 @@ const Login = () => {
           </div>
           <div>
             <label className="label">
-              <span className="text-base label-text">Password</span>
+              <span className="text-base label-text text-gray-100">
+                Password
+              </span>
             </label>
 
             <input
@@ -30,12 +36,12 @@ const Login = () => {
             />
           </div>
 
-          <a
-            href="#"
+          <Link
+            to="/signup"
             className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
           >
             {"Don't"} have an account ?
-          </a>
+          </Link>
 
           <div>
             <button className="btn btn-block btn-sm mt-2">Login</button>

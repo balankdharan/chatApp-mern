@@ -1,20 +1,33 @@
-const SingleMessage = () => {
+import { useAuthContext } from "../../context/AuthContext";
+import useConversation from "../../store/useConversation";
+import { extractTime } from "../../utils/extractTime";
+
+const SingleMessage = ({ message }) => {
+  const { authUser } = useAuthContext();
+  const { selectedConversation } = useConversation();
+  const fromMe = message.senderId === authUser._id;
+  const chatClassName = fromMe ? "chat-end" : "chat-start";
+  const profilePicture = fromMe
+    ? authUser.profilePic
+    : selectedConversation?.profilePic;
+  const bubbleBgColor = fromMe ? "bg-blue-500" : "";
+  const formattedTime = extractTime(message.createdAt);
+  const shakeClass = message.shouldShake ? "shake" : "";
   return (
-    <div className="chat chat-end">
+    <div className={`chat ${chatClassName} `}>
       <div className="chat-image avatar">
         <div className="w-10 rounded-full">
-          <img
-            src="https://hips.hearstapps.com/hmg-prod/images/instagram-food-1536589581.jpg"
-            alt="user profile"
-          />
+          <img src={profilePicture} alt="user profile" />
         </div>
       </div>
 
-      <div className={`chat-bubble text-white bg-blue-500`}>
-        Hi! What are you
+      <div className={`chat-bubble text-white ${bubbleBgColor} ${shakeClass} `}>
+        {message.message}
       </div>
-      <div className={`chat-footer opacity-50 text-xs flex gap-1 items-center`}>
-        13:51
+      <div
+        className={`chat-footer  opacity-50 text-xs flex gap-1 items-center text-gray-300`}
+      >
+        {formattedTime}
       </div>
     </div>
   );

@@ -1,14 +1,23 @@
 import SingleConversation from "./SingleConversation";
+import useGetConversations from "../hooks/useGetConversations";
+import { getRandomEmoji } from "../utils/emojis";
 
 const Conversations = () => {
+  const { loading, conversations } = useGetConversations();
+
   return (
     <div className="py-2 flex flex-col overflow-auto">
-      <SingleConversation />
-      <SingleConversation />
-      <SingleConversation />
-      <SingleConversation />
-      <SingleConversation />
-      <SingleConversation />
+      {conversations.map((conversation, idx) => (
+        <SingleConversation
+          key={conversation._id}
+          conversation={conversation}
+          emoji={getRandomEmoji()}
+          lastIdx={idx === conversations.length - 1}
+        />
+      ))}
+      {loading ? (
+        <span className="loading loading-spinner mx-auto"></span>
+      ) : null}
     </div>
   );
 };
